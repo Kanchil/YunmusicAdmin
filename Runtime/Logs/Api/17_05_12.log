@@ -1,0 +1,23 @@
+[ 2017-05-12T21:53:09+08:00 ] 127.0.0.1 /api.php?s=/index/getSongListByType
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000049s ]
+INFO: Run Common\Behavior\InitHookBehavior [ RunTime:0.013407s ]
+INFO: [ app_init ] --END-- [ RunTime:0.014620s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.003806s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.004274s ]
+SQL: SHOW COLUMNS FROM `ym_songs` [ RunTime:0.0041s ]
+ERR: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'by song.add_time desc limit 2' at line 2
+
+[ 2017-05-12T21:53:47+08:00 ] 127.0.0.1 /api.php?s=/index/getSongListByType
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000065s ]
+INFO: Run Common\Behavior\InitHookBehavior [ RunTime:0.013139s ]
+INFO: [ app_init ] --END-- [ RunTime:0.014091s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.002748s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002803s ]
+SQL: SHOW COLUMNS FROM `ym_songs` [ RunTime:0.0084s ]
+SQL: select song.id,song.name,song.artist_id,song.artist_name,song.cover_url,extend.listen_url,extend.down_url from ym_songs song left join ym_songs_extend extend on extend.mid = song.id
+      where song.status = 1 and song.album_id = 1 order by song.add_time desc limit 2 [ RunTime:0.0035s ]
+
