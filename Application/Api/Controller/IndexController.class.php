@@ -25,10 +25,10 @@ class IndexController extends Controller {
       }
       $data = M('songs')->query($sql);
       if (empty($data)) {
-        $result['status'] = 0;
+        $result['errorcode'] = 4000;
         $result['message'] = "获取歌曲失败！";
       }else{
-        $result['status'] = 1;
+        $result['errorcode'] = 200;
         $result['message'] = "获取歌曲成功！";
       }
       $result['data'] = $data;
@@ -39,7 +39,7 @@ class IndexController extends Controller {
       $songName = I('songname',null);
       $limit = I('limit',10);
       if ($songName == null) {
-        $result['status'] = 0;
+        $result['errorcode'] = 5000;
         $result['message'] = '搜索内容不能为空！' ;
         $this->ajaxReturn($result);
       }
@@ -47,10 +47,10 @@ class IndexController extends Controller {
       where song.name like '%".trim($songName)."%' and song.status = 1 order by song.add_time desc limit ".$limit;
       $data = M('songs')->query($sql);
       if (empty($data)) {
-        $result['status'] = 0;
+        $result['errorcode'] = 4000;
         $result['message'] = "获取歌曲失败！";
       }else{
-        $result['status'] = 1;
+        $result['errorcode'] = 200;
         $result['message'] = "获取歌曲成功！";
       }
       $result['data'] = $data;
@@ -58,27 +58,27 @@ class IndexController extends Controller {
     }
     //用户注册
     function register(){
-      $username = I('username');
-      $password = $this->think_ucenter_md5(I('password'));
+      $username = I('post.username');
+      $password = $this->think_ucenter_md5(I('post.password'));
       if (empty($username) || empty($password)) {
-        $result['status'] = 0;
+        $result['errorcode'] = 4002;
         $result['message'] = '注册失败！用户名和密码不能为空';
         $this->ajaxReturn($result);
       }
       $isExist = M('Member')->where("nickname = '".trim($username)."'")->find();
       // var_dump($isExist);exit;
       if (count($isExist) > 0) {
-        $result['status'] = -1;
+        $result['errorcode'] = 4001;
         $result['message'] = '用户名已经存在！';
         $this->ajaxReturn($result);
         exit;
       }
       $user = array('nickname' => $username, 'password'=>$password, 'status' => 1);
       if(M('Member')->add($user)){
-        $result['status'] = 1;
+        $result['errorcode'] = 200;
         $result['message'] = '注册成功！';
       }else {
-        $result['status'] = 0;
+        $result['errorcode'] = 4000;
         $result['message'] = '注册失败！';
       }
       $this->ajaxReturn($result);
@@ -86,29 +86,32 @@ class IndexController extends Controller {
     }
     //用户登陆
     public function login(){
-      $username = I('username');
-      $password = $this->think_ucenter_md5(I('password'));
+      $username = I('post.username');
+      $password = $this->think_ucenter_md5(I('post.password'));
       if (empty($username) || empty($password)) {
-        $result['status'] = 0;
+        $result['errorcode'] = 4000;
         $result['message'] = '登陆失败！请核对您的用户名或者密码';
-        $result['data'] = null;
         $this->ajaxReturn($result);
       }
-      $getPassword = M('Member')->where("nickname = '".trim($username)."'")->getField('password');
-      if($password == $getPassword){
-        $result['status'] = 1;
+      $getPassword = M('Member')->where("nickname = '".trim($username)."'")->find();
+      if (empty($getPassword)) {
+      	$result['errorcode'] = 4000;
+        $result['message'] = '登陆失败！请核对您的用户名或者密码';
+        $this->ajaxReturn($result);
+      }
+      if($password == $getPassword['password']){
+        $result['errorcode'] = 200;
         $result['message'] = '登陆成功！';
         $result['data'] = M('Member')->where(array('nickname'=>trim($username)))->field('uid,nickname')->select();
       }else{
-        $result['status'] = 0;
+        $result['errorcode'] = 4000;
         $result['message'] = '登陆失败！请核对您的用户名或者密码';
-        $data['data'] = null;
       }
       $this->ajaxReturn($result);
     }
     //用户退出
     public function logout(){
-      $result['status'] = 1;
+      $result['errorcode'] = 200;
       $result['message'] = '退出成功！';
       $this->ajaxReturn($result);
     }
@@ -119,7 +122,7 @@ class IndexController extends Controller {
     //获取用户云歌曲列表  根据用户id
     public function getFavoriteSongs(){
       // $songId = I('songId');
-      $userId = I('userId');
+      $userId = I('get.userId');
       $where = array(
         'user_id' => $userId,
         'status' => 1
@@ -134,19 +137,18 @@ class IndexController extends Controller {
         where song.status = 1 and song.id in (".implode(',',$songIdsArr).")";
         $songs = M('songs')->query($songSql);
         $result['data'] = $songs;
-        $result['status'] = 1;
+        $result['errorcode'] = 200;
         $result['message'] = "成功！";
       }else{
-        $result['status'] = 0;
+        $result['errorcode'] = 4000;
         $result['message'] = "失败！";
-        $result['data'] = null;
       }
       return $this->ajaxReturn($result);
     }
     //收藏歌曲到云
     public function favoriteSong(){
-      $userId = I('userId');
-      $songId = I('songId');
+      $userId = I('get.userId');
+      $songId = I('get.songId');
       $where = array(
         'user_id' => $userId,
         'song_id' => $songId
@@ -165,18 +167,18 @@ class IndexController extends Controller {
         ))->add();
       }
       if ($row) {
-        $result['status'] = 1;
+        $result['errorcode'] = 200;
         $result['message'] = "添加到云成功！";
       }else{
-        $result['status'] = 0;
+        $result['errorcode'] = 200;
         $result['message'] = "添加到云失败！";
       }
       $this->ajaxReturn($result);
     }
     //从云音乐列表中去除
     public function cancelFavorite(){
-      $userId = I('userId');
-      $songId = I('songId');
+      $userId = I('get.userId');
+      $songId = I('get.songId');
       $where = array(
         'user_id' => $userId,
         'song_id' => $songId
@@ -186,27 +188,29 @@ class IndexController extends Controller {
         'updatetime' => time()
       ));
       if ($row) {
-        $result['status'] = 1;
+        $result['errorcode'] = 200;
         $result['message'] = "移除音乐成功！";
       }else{
-        $result['status'] = 0;
+        $result['errorcode'] = 4000;
         $result['message'] = "移除音乐失败！";
       }
       $this->ajaxReturn($result);
     }
     //判断是否已收藏
     public function isFavoriate(){
-      $userId = I("userId");
-      $songId = I("songId");
+      $userId = I("get.userId");
+      $songId = I("get.songId");
       $row = M("user_yun")->where(array(
         'user_id' => $userId,
         'song_id' => $songId,
         'status' => 1
       ))->count();
       if ($row > 0) {  //已收藏
-        $result['status'] = 1;
+        $result['errorcode'] = 200;
+        $result['data'] = true;
       }else{
-        $result['status'] = 0;
+        $result['errorcode'] = 200;
+        $result['data'] = false;
       }
       $this->ajaxReturn($result);
     }
