@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : php5.5
-Source Server Version : 50505
-Source Host           : localhost:3306
+Source Server         : music
+Source Server Version : 50557
+Source Host           : music.mai516.com:3306
 Source Database       : yunmusic
 
 Target Server Type    : MYSQL
-Target Server Version : 50505
+Target Server Version : 50557
 File Encoding         : 65001
 
-Date: 2017-04-28 21:54:31
+Date: 2018-03-30 19:35:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -65,7 +65,7 @@ CREATE TABLE `ym_action_log` (
   KEY `action_ip_ix` (`action_ip`),
   KEY `action_id_ix` (`action_id`),
   KEY `user_id_ix` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='行为日志表';
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='行为日志表';
 
 -- ----------------------------
 -- Records of ym_action_log
@@ -73,6 +73,10 @@ CREATE TABLE `ym_action_log` (
 INSERT INTO `ym_action_log` VALUES ('1', '1', '1', '2130706433', 'member', '1', 'yunmusic在2017-04-27 22:18登录了后台', '1', '1493302713');
 INSERT INTO `ym_action_log` VALUES ('2', '1', '1', '2130706433', 'member', '1', 'yunmusic在2017-04-28 20:39登录了后台', '1', '1493383144');
 INSERT INTO `ym_action_log` VALUES ('3', '1', '1', '2130706433', 'member', '1', 'yunmusic在2017-04-28 21:05登录了后台', '1', '1493384718');
+INSERT INTO `ym_action_log` VALUES ('4', '1', '1', '2130706433', 'member', '1', 'yunmusic在2018-03-03 21:12登录了后台', '1', '1520082757');
+INSERT INTO `ym_action_log` VALUES ('5', '1', '1', '2130706433', 'member', '1', 'yunmusic在2018-03-21 19:46登录了后台', '1', '1521632806');
+INSERT INTO `ym_action_log` VALUES ('6', '1', '1', '1864300345', 'member', '1', 'yunmusic在2018-03-22 19:58登录了后台', '1', '1521719938');
+INSERT INTO `ym_action_log` VALUES ('7', '1', '1', '1864300345', 'member', '1', 'yunmusic在2018-03-22 20:19登录了后台', '1', '1521721159');
 
 -- ----------------------------
 -- Table structure for ym_addons
@@ -188,11 +192,12 @@ CREATE TABLE `ym_album` (
   `introduce` mediumtext,
   `status` int(2) NOT NULL DEFAULT '0' COMMENT '专辑状态',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ym_album
 -- ----------------------------
+INSERT INTO `ym_album` VALUES ('1', 'ceshi', '1', '国语专辑', '0', '其它', '1', '网络', '1', 'yunmusic', 'c', '', '', '0', '', '0', '1521633548', '1521633548', '0', '0', '0', '0', '0', '', '1');
 
 -- ----------------------------
 -- Table structure for ym_album_type
@@ -241,11 +246,12 @@ CREATE TABLE `ym_artist` (
   `status` int(4) NOT NULL DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ym_artist
 -- ----------------------------
+INSERT INTO `ym_artist` VALUES ('1', '其它', '0', 'c', '网络', '0', null, '内地', '1', '0', '0', '0', '0', '0', '0', null, '1521633548', '1521633548', '1');
 
 -- ----------------------------
 -- Table structure for ym_artist_type
@@ -993,11 +999,12 @@ CREATE TABLE `ym_file` (
   `create_time` int(10) unsigned NOT NULL COMMENT '上传时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_md5` (`md5`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='文件表';
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='文件表';
 
 -- ----------------------------
 -- Records of ym_file
 -- ----------------------------
+INSERT INTO `ym_file` VALUES ('1', '茶太 - 梦笑顔 .mp3', '5ab24773c761e.mp3', './Uploads/Music/2018-03-21/', 'mp3', 'audio/mpeg', '5009549', '6e6c3fdad5ce0fccf1a78d61955dafa8', 'b2301e8a16e6a2eb83d048878ec4751b14140056', '0', null, '1521633139');
 
 -- ----------------------------
 -- Table structure for ym_genre
@@ -1112,6 +1119,7 @@ DROP TABLE IF EXISTS `ym_member`;
 CREATE TABLE `ym_member` (
   `uid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `nickname` char(16) NOT NULL DEFAULT '' COMMENT '昵称',
+  `password` varchar(255) NOT NULL DEFAULT '''''',
   `pic_id` int(11) NOT NULL DEFAULT '0',
   `songs` int(10) NOT NULL DEFAULT '0' COMMENT '添加音乐数量',
   `albums` int(10) NOT NULL DEFAULT '0' COMMENT '创建专辑数量',
@@ -1139,12 +1147,13 @@ CREATE TABLE `ym_member` (
   `cdkey` varchar(60) DEFAULT NULL COMMENT '激活码',
   PRIMARY KEY (`uid`),
   KEY `status` (`status`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='会员表';
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='会员表';
 
 -- ----------------------------
 -- Records of ym_member
 -- ----------------------------
-INSERT INTO `ym_member` VALUES ('1', 'yunmusic', '0', '0', '0', '0', '0', '0', '1', '1', '0000-00-00', 'NULL', '10', '0', 'NULL', 'NULL', '0', '0', '0', '0', '3', '1493302331', '1493302331', '2130706433', '1493384718', '1', null);
+INSERT INTO `ym_member` VALUES ('1', 'yunmusic', '\'\'', '0', '1', '0', '0', '0', '0', '1', '1', '0000-00-00', 'NULL', '40', '0', 'NULL', 'NULL', '0', '0', '0', '0', '7', '1493302331', '1493302331', '1864300345', '1521721159', '1', null);
+INSERT INTO `ym_member` VALUES ('3', 'dd', 'dbc049391b4d69f461513ea7e46ea3dd', '0', '0', '0', '0', '0', '0', '0', '1', '0000-00-00', null, '0', '0', null, null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', null);
 
 -- ----------------------------
 -- Table structure for ym_member_auth_musician
@@ -1696,11 +1705,12 @@ CREATE TABLE `ym_songs` (
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态',
   PRIMARY KEY (`id`),
   KEY `status` (`digg`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ym_songs
 -- ----------------------------
+INSERT INTO `ym_songs` VALUES ('1', 'dd', '0', '其它', '1', 'ceshi', '0', '0', '', '', '0', '', '1', 'yunmusic', '0', '0', '0', null, '0', '0', '0', '0', null, '2', '0', '0', '0', '0', '0', null, null, null, '1521633167', '1521633590', '1');
 
 -- ----------------------------
 -- Table structure for ym_songs_extend
@@ -1726,6 +1736,7 @@ CREATE TABLE `ym_songs_extend` (
 -- ----------------------------
 -- Records of ym_songs_extend
 -- ----------------------------
+INSERT INTO `ym_songs_extend` VALUES ('1', '/Uploads/Music/2018-03-21/5ab24773c761e.mp3', '/Uploads/Music/2018-03-21/5ab24773c761e.mp3', '0', '0', '0', null, '0', '', '', '{\"group\":[\"0\",\"1\",\"2\",\"3\"],\"coin\":\"0\"}', '', '');
 
 -- ----------------------------
 -- Table structure for ym_sync_login
@@ -1829,7 +1840,7 @@ CREATE TABLE `ym_ucenter_member` (
 -- ----------------------------
 -- Records of ym_ucenter_member
 -- ----------------------------
-INSERT INTO `ym_ucenter_member` VALUES ('1', 'yunmusic', 'aa36f92d1c2ba1224ea750e3fe3c0d06', '1358244055@qq.com', '', '1493302331', '2130706433', '1493384718', '2130706433', '1493302331', '1');
+INSERT INTO `ym_ucenter_member` VALUES ('1', 'yunmusic', 'aa36f92d1c2ba1224ea750e3fe3c0d06', '1358244055@qq.com', '', '1493302331', '2130706433', '1521721159', '1864300345', '1493302331', '1');
 
 -- ----------------------------
 -- Table structure for ym_ucenter_setting
@@ -2013,3 +2024,22 @@ CREATE TABLE `ym_user_upload` (
 -- ----------------------------
 -- Records of ym_user_upload
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for ym_user_yun
+-- ----------------------------
+DROP TABLE IF EXISTS `ym_user_yun`;
+CREATE TABLE `ym_user_yun` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `song_id` int(11) NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ym_user_yun
+-- ----------------------------
+INSERT INTO `ym_user_yun` VALUES ('0', '0', '1', '1', '0', '0');
